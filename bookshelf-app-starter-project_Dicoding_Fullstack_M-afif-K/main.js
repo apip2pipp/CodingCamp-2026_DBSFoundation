@@ -125,7 +125,14 @@ function createBookElement(book) {
   completeButton.textContent = book.isComplete ? 'Belum selesai dibaca' : 'Selesai dibaca';
   completeButton.addEventListener('click', () => {
     toggleBookComplete(book.id);
-    renderBooks();
+    // jika ada kata di kolom pencarian, lakukan render ulang berdasarkan filter saat ini
+    const searchInput = document.getElementById('searchBookTitle');
+    if (searchInput && searchInput.value.trim() !== '') {
+      const results = searchBooks(searchInput.value);
+      renderBooks(results);
+    } else {
+      renderBooks();
+    }
   });
 
   const deleteButton = document.createElement('button');
@@ -133,7 +140,14 @@ function createBookElement(book) {
   deleteButton.textContent = 'Hapus Buku';
   deleteButton.addEventListener('click', () => {
     deleteBook(book.id);
-    renderBooks();
+    // jika sedang dalam mode pencarian, pertahankan hasil pencarian setelah hapus
+    const searchInput = document.getElementById('searchBookTitle');
+    if (searchInput && searchInput.value.trim() !== '') {
+      const results = searchBooks(searchInput.value);
+      renderBooks(results);
+    } else {
+      renderBooks();
+    }
   });
 
   const editButton = document.createElement('button');
